@@ -90,6 +90,7 @@ module GraphQL
           *@schema.introspection_system.types.values,
           *@schema.introspection_system.entry_points.map { |ep| ep.type.unwrap },
           *@schema.orphan_types,
+          *@schema.extra_types,
         ]
         # Root types may have been nil:
         types_to_visit.compact!
@@ -272,6 +273,12 @@ module GraphQL
           end
 
           @schema.root_types.each { |t| @all_references[t] << true }
+          @schema.extra_types.each do |t|
+            @all_references[t] << true
+            if t.respond_to?(:orphan_types)
+              t.orphan_types.each { |ot| @all_references[ot] << true }
+            end
+          end
           @schema.introspection_system.types.each_value { |t| @all_references[t] << true }
           @schema.directives.each_value { |dir_class| @all_references[dir_class] << true }
 

@@ -20,8 +20,10 @@ module GraphQL
       end
 
       def types
-        query_types = context.types.all_types
-        types = query_types + context.schema.extra_types
+        types = context.types.all_types
+        if !context.schema.use_visibility_profile?
+          types = types + context.schema.extra_types
+        end
         types.sort_by!(&:graphql_name)
         types
       end

@@ -25,7 +25,7 @@ module GraphQL
       def self.__type(context, name:)
         if context.types.reachable_type?(name) && (type = context.types.type(name))
           type
-        elsif (type = context.schema.extra_types.find { |t| t.graphql_name == name })
+        elsif !context.schema.use_visibility_profile? && (type = context.schema.extra_types.find { |t| t.graphql_name == name })
           type
         else
           nil

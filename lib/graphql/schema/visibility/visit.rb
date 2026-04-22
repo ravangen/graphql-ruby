@@ -20,6 +20,7 @@ module GraphQL
             @schema.subscription,
             *@schema.introspection_system.types.values,
             *@schema.orphan_types,
+            *@schema.extra_types,
           ]
           ept.compact!
           ept
